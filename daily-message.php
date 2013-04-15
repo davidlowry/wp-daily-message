@@ -17,29 +17,26 @@ Author URI: http://davidlowry.co.uk
 // Create a master category for Calendar and its sub-pages
 add_action('admin_menu', 'daily_message_menu');
 
-function daily_message_menu() 
-{
-  global $wpdb;
+function daily_message_menu(){
+	global $wpdb;
 
-  // We make use of the Calendar tables so we must have installed daily_message
-  check_daily_message();
+	// We make use of the Calendar tables so we must have installed daily_message
+	check_daily_message();
 
-  // Set admin as the only one who can use daily_message for security
-  $allowed_group = 'edit_post'; //'manage_options';
-  
-  // Add the admin panel pages for daily_message. Use permissions pulled from above
-   if (function_exists('add_menu_page')) 
-     {
-       add_menu_page(__('Daily Message','daily_message'), __('Daily Message','daily_message'), $allowed_group, 'daily_message', 'edit_daily_message');
-     }
-   if (function_exists('add_submenu_page')) 
-     {
-       add_submenu_page('daily_message', __('Manage Daily Messages','daily_message'), __('Manage Daily Messages','daily_message'), $allowed_group, 'daily_message', 'edit_daily_message');
+	// Set admin as the only one who can use daily_message for security
+	$allowed_group = 'edit_post'; //'manage_options';
+	
+	// Add the admin panel pages for daily_message. Use permissions pulled from above
+	if (function_exists('add_menu_page')){
+		add_menu_page(__('Daily Message','daily_message'), __('Daily Message','daily_message'), $allowed_group, 'daily_message', 'edit_daily_message');
+	}
+	if (function_exists('add_submenu_page')){
+		add_submenu_page('daily_message', __('Manage Daily Messages','daily_message'), __('Manage Daily Messages','daily_message'), $allowed_group, 'daily_message', 'edit_daily_message');
        // add_action( "admin_head", 'calendar_add_javascript' );
        // Note only admin can change calendar options
        // add_submenu_page('daily_message', __('Manage Categories','calendar'), __('Manage Categories','calendar'), 'manage_options', 'calendar-categories', 'manage_categories');
        // add_submenu_page('daily_message', __('Calendar Config','calendar'), __('Calendar Options','calendar'), 'manage_options', 'calendar-config', 'edit_calendar_config');
-     }
+	}
 }
 
 
