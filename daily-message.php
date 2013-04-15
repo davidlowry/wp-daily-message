@@ -130,29 +130,30 @@ function check_daily_message() {
       $wpdb->get_results($sql);
     }
 
-    // $sql = "CREATE TABLE " . WP_DAILY_MESSAGE_TABLE . " (
-    //     message_id INT(11) NOT NULL AUTO_INCREMENT,
-    //     message_date DATE NOT NULL,
-    //     message_topic VARCHAR(30) NOT NULL,
-    //     message_long TEXT,
-    // 
-    //     message_begin DATE NOT NULL ,
-    //     message_end DATE NOT NULL ,
-    // 
-    //     message_recur CHAR(1) ,
-    //     message_repeats INT(3) ,
-    //     message_author BIGINT(20) UNSIGNED,
-    // 
-    //     PRIMARY KEY (message_id)
-    // )";
-    // $wpdb->get_results($sql);
-
-    // $sql = "CREATE TABLE " . WP_DAILY_MESSAGE_CONFIG_TABLE . " (
-    //     config_item VARCHAR(30) NOT NULL ,
-    //     config_value TEXT NOT NULL ,
-    //     PRIMARY KEY (config_item)
-    // )";
-    // $wpdb->get_results($sql);
+	// // Future-proofing, allow overrides to replace daily messages for various periods of time
+	//     $sql = "CREATE TABLE " . WP_DAILY_MESSAGE_TABLE . " (
+	//         message_id INT(11) NOT NULL AUTO_INCREMENT,
+	//         message_date DATE NOT NULL,
+	//         message_topic VARCHAR(30) NOT NULL,
+	//         message_long TEXT,
+	//     
+	//         message_begin DATE NOT NULL ,
+	//         message_end DATE NOT NULL ,
+	//     
+	//         message_recur CHAR(1) ,
+	//         message_repeats INT(3) ,
+	//         message_author BIGINT(20) UNSIGNED,
+	//     
+	//         PRIMARY KEY (message_id)
+	//     )";
+	//     $wpdb->get_results($sql);
+    
+    $sql = "CREATE TABLE " . WP_DAILY_MESSAGE_CONFIG_TABLE . " (
+        config_item VARCHAR(30) NOT NULL ,
+        config_value TEXT NOT NULL ,
+        PRIMARY KEY (config_item)
+    )";
+    $wpdb->get_results($sql);
 
   }
 }
@@ -194,7 +195,6 @@ function wp_daily_messages_display_list()
 			?>
 			<tr class="<?php echo $class; ?>">
 				<th scope="row"><?php echo $message->day_of_month; ?> <?php echo $message->message_topic; ?> <br /><a href="<?php echo $_SERVER['PHP_SELF'] ?>?page=daily_message&amp;action=edit&amp;day_of_month=<?php echo $message->day_of_month;?>" class='edit'><?php echo __('Edit','daily_message'); ?></a> | <a href="<?php echo $_SERVER['PHP_SELF'] ?>?page=daily_message&amp;action=delete&amp;event_id=<?php echo $message->day_of_month;?>" class="delete" onclick="return confirm('<?php _e('Are you sure you want to delete this daily_message item?','daily_message'); ?>')"><?php echo __('Delete','daily_message'); ?></a></th>
-
 				<td><?php echo $message->message_long; ?></td>
 			</tr>
 			
@@ -222,7 +222,7 @@ function wp_daily_message_defaults_edit_form($mode='edit', $day_of_month=false)
 	
 	if ( $day_of_month !== false ) {
 		if ( intval($day_of_month) != $day_of_month ) {
-			echo "<div class=\"error\"><p>".__('Bad Monkey! No banana!','daily_message')."</p></div>";
+			echo "<div class=\"error\"><p>".__('An error has occurred!','daily_message')."</p></div>";
 			return;
 		} else {
 			$data = $wpdb->get_results("SELECT * FROM " . WP_DAILY_MESSAGE_DEFAULTS_TABLE . " WHERE day_of_month='" . mysql_escape_string($day_of_month) . "' LIMIT 1");
@@ -234,11 +234,11 @@ function wp_daily_message_defaults_edit_form($mode='edit', $day_of_month=false)
 		}
 		// Recover users entries if they exist; in other words if editing an event went wrong
 		if (!empty($users_entries)) {
-	    $data = $users_entries;
-	  }
+			$data = $users_entries;
+		}
 	} else {
-    $data = $users_entries;
-  }
+		$data = $users_entries;
+	}
 	
 	?>
 
